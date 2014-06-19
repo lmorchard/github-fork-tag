@@ -1,10 +1,10 @@
 # fork-me-on-github
 
-> A [Brick](https://github.com/mozilla/brick/) custom element starter-kit.
+> A [Brick](https://github.com/mozilla/brick/) custom element that provides a GitHub banner.
 
 ## Demo
 
-[Check it live!](http://lmorchard.github.io/fork-me-on-github)
+[Check it live!](http://lmorchard.github.io/github-fork-tag)
 
 ## Usage
 
