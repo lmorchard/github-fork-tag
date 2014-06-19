@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+    <title>fork-me-on-github</title>
+
+    <!-- Importing Polyfill -->
+    <script src="bower_components/platform/platform.js"></script>
+
+    <!-- Importing Custom Elemenent -->
+    <link rel="import" href="src/element.html">
+
+    <style type="text/css">
+      section.main {
+        margin: 10em auto;
+        width: 30em;
+      }
+      section.main form ul {
+        list-style-type: none;
+      }
+      section.main form ul li {
+      }
+      section.main form label {
+        float: left;
+        width: 7em;
+        text-align: right;
+        margin: 0 0.75em 0 0;
+      }
+    </style>
+  </head>
+  <body>
+
+    <section class="main">
+      <h1>Shiny GitHub ribbon component!</h1>
+      <form>
+        <ul>
+          <li>
+            <label for="user">User</label>
+            <input type="text" id="user">
+          </li>
+          <li>
+            <label for="repo">Repo</label>
+            <input type="text" id="repo">
+          </li>
+          <li>
+            <label for="color">Color</label>
+            <select id="color">
+              <option>red</option>
+              <option>green</option>
+              <option>orange</option>
+              <option>gray</option>
+            </select>
+          </li>
+          <li>
+            <label for="position">Position</label>
+            <select id="position">
+              <option>left</option>
+              <option>right</option>
+              <option>left-bottom</option>
+              <option>right-bottom</option>
+            </select>
+          </li>
+        </ul>
+      </form>
+    </section>
+
+    <!-- Using Custom Element -->
+    <fork-me-on-github id="r1" position="right"
+        user="lmorchard" repo="parsec-patrol"></fork-me-on-github>
+
+    <script>
+      window.addEventListener('WebComponentsReady', function(e) {
+        var r1 = document.getElementById('r1');
+
+        var el_user = document.getElementById('user');
+        el_user.value = r1.user;
+        el_user.addEventListener('change', function () {
+          r1.user = el_user.value;
+        });
+
+        var el_repo = document.getElementById('repo');
+        el_repo.value = r1.repo;
+        el_repo.addEventListener('change', function () {
+          r1.repo = el_repo.value;
+        });
+
+        var el_position = document.getElementById('position');
+        el_position.addEventListener('change', function () {
+          console.log(el_position);
+        });
+      });
+    </script>
+
+  </body>
+</html>
