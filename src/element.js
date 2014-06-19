@@ -14,6 +14,7 @@
   // Better figure out how component styling works
   var COLORS = {
     "default": null,
+    "red": "#c00",
     "green": "#090",
     "orange": "#f80",
     "gray": "#333"

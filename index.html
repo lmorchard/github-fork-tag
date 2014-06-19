@@ -19,8 +19,6 @@
       section.main form ul {
         list-style-type: none;
       }
-      section.main form ul li {
-      }
       section.main form label {
         float: left;
         width: 7em;
@@ -44,21 +42,21 @@
             <input type="text" id="repo">
           </li>
           <li>
-            <label for="color">Color</label>
-            <select id="color">
-              <option>red</option>
-              <option>green</option>
-              <option>orange</option>
-              <option>gray</option>
-            </select>
-          </li>
-          <li>
             <label for="position">Position</label>
             <select id="position">
               <option>left</option>
               <option>right</option>
               <option>left-bottom</option>
               <option>right-bottom</option>
+            </select>
+          </li>
+          <li>
+            <label for="color">Color</label>
+            <select id="color">
+              <option>red</option>
+              <option>green</option>
+              <option>orange</option>
+              <option>gray</option>
             </select>
           </li>
         </ul>
@@ -85,9 +83,16 @@
           r1.repo = el_repo.value;
         });
 
+        var el_color = document.getElementById('color');
+        el_color.value = r1.color;
+        el_color.addEventListener('change', function () {
+          r1.color = el_color.value;
+        });
+
         var el_position = document.getElementById('position');
+        el_position.value = r1.position;
         el_position.addEventListener('change', function () {
-          console.log(el_position);
+          r1.position = el_position.value;
         });
       });
     </script>
