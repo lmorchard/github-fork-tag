@@ -21,8 +21,8 @@
   };
 
   // Get access to the template 
-  var curr_script = document._currentScript || document.currentScript;
-  var tmpl = curr_script.ownerDocument.getElementById('ribbon-template');
+  var currScript = document._currentScript || document.currentScript;
+  var tmpl = currScript.ownerDocument.getElementById('ribbon-template');
 
   // Attribute handlers
   var attrs = {
@@ -66,7 +66,7 @@
       }
     }
     link.setAttribute('href', parts.join('/'));
-  };
+  }
 
   // Lifecycle methods
   RibbonPrototype.createdCallback = function () {
@@ -77,14 +77,13 @@
   };
 
   RibbonPrototype.attachedCallback = function () {
-    for (k in attrs) {
+    for (var k in attrs) {
       attrs[k].call(this, null, this.getAttribute(k));
     }
     render(this);
   };
 
   RibbonPrototype.detachedCallback = function () {
-    var ribbon = this; 
   };
 
   RibbonPrototype.attributeChangedCallback = function (attr, oldVal, newVal) {
@@ -96,17 +95,18 @@
 
   // Property accessors, magically boilerplated
   var props = {};
-  for (name in attrs) {
-    props[name] = (function (name) {
-      return {
-        get: function () {
-          return this.ns[name]
-        },
-        set: function (newVal) {
-          return this.attributeChangedCallback(name, this.ns[name], newVal);
-        }
-      };
-    })(name);
+  function makeProp (name) {
+    return {
+      get: function () {
+        return this.ns[name];
+      },
+      set: function (newVal) {
+        return this.attributeChangedCallback(name, this.ns[name], newVal);
+      }
+    };
+  }
+  for (var name in attrs) {
+    props[name] = makeProp(name);
   }
   Object.defineProperties(RibbonPrototype, props);
 
