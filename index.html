@@ -19,11 +19,18 @@
       section.main form ul {
         list-style-type: none;
       }
+      section.main form ul li {
+        margin: 0.5em 0 0 0;
+      }
       section.main form label {
         float: left;
         width: 7em;
         text-align: right;
         margin: 0 0.75em 0 0;
+      }
+      section.main form select,
+      section.main form input {
+        min-width: 15em;
       }
     </style>
   </head>
@@ -47,7 +54,7 @@
           </li>
           <li>
             <label for="position">Position</label>
-            <select id="position">
+            <select id="position" size="4">
               <option>left</option>
               <option>right</option>
               <option>left-bottom</option>
@@ -56,7 +63,7 @@
           </li>
           <li>
             <label for="color">Color</label>
-            <select id="color">
+            <select id="color" size="4">
               <option>red</option>
               <option>green</option>
               <option>orange</option>
