@@ -37,6 +37,9 @@
     },
     "repo": function (oldVal, newVal) {
       this.ns.repo = newVal;
+    },
+    "content": function (oldVal, newVal) {
+      this.ns.content = newVal;
     }
   };
 
@@ -65,12 +68,16 @@
         parts.push(ns.repo);
       }
     }
+
+    link.innerHTML = ns.content;
     link.setAttribute('href', parts.join('/'));
   }
 
   // Lifecycle methods
   RibbonPrototype.createdCallback = function () {
     this.ns = {};
+    this.ns.content = this.innerHTML || 'Fork me on GitHub';
+    this.innerHTML = '';
     var frag = document.importNode(tmpl.content, true);
     this.root = frag.querySelector('.github-fork-ribbon-wrapper');
     this.appendChild(this.root);
@@ -78,6 +85,9 @@
 
   RibbonPrototype.attachedCallback = function () {
     for (var k in attrs) {
+      if ('content' === k) {
+        continue;
+      }
       attrs[k].call(this, null, this.getAttribute(k));
     }
     render(this);

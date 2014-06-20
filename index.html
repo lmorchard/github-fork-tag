@@ -34,6 +34,10 @@
       <form>
         <ul>
           <li>
+            <label for="content">Message</label>
+            <input type="text" id="content">
+          </li>
+          <li>
             <label for="user">User</label>
             <input type="text" id="user">
           </li>
@@ -65,11 +69,19 @@
 
     <!-- Using Custom Element -->
     <fork-me-on-github id="r1" position="right"
-        user="lmorchard" repo="parsec-patrol"></fork-me-on-github>
+        user="lmorchard" repo="github-fork-tag">Fork me on GitHub</fork-me-on-github>
 
     <script>
       window.addEventListener('WebComponentsReady', function(e) {
         var r1 = document.getElementById('r1');
+
+        var el_content = document.getElementById('content');
+        el_content.value = r1.content;
+        function changeContent () {
+          r1.content = el_content.value;
+        }
+        el_content.addEventListener('change', changeContent);
+        el_content.addEventListener('keyup', changeContent);
 
         var el_user = document.getElementById('user');
         el_user.value = r1.user;
