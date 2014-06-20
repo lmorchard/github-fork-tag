@@ -1,36 +1,20 @@
 (function () {
 
+  var POSITIONS = ['right', 'left', 'right-bottom', 'left-bottom'];
+  var COLORS = ['red', 'green', 'orange', 'gray'];
+
   var RibbonPrototype = Object.create(HTMLElement.prototype);
 
-  var POSITIONS = {
-    "default": "right",
-    "left": "left",
-    "right": "right",
-    "right-bottom": "right-bottom",
-    "left-bottom": "left-bottom"
-  };
-
-  // FIXME: Hard coded colors like this are a terrible idea.
-  // Better figure out how component styling works
-  var COLORS = {
-    "default": null,
-    "red": "#c00",
-    "green": "#090",
-    "orange": "#f80",
-    "gray": "#333"
-  };
-
-  // Get access to the template 
   var currScript = document._currentScript || document.currentScript;
   var tmpl = currScript.ownerDocument.getElementById('ribbon-template');
 
   // Attribute handlers
   var attrs = {
     "position": function (oldVal, newVal) {
-      this.ns.position = POSITIONS[newVal] || POSITIONS['default'];
+      this.ns.position = validOrDefault(POSITIONS, newVal);
     },
     "color": function (oldVal, newVal) {
-      this.ns.color = COLORS[newVal] || COLORS['default'];
+      this.ns.color = validOrDefault(COLORS, newVal);
     },
     "user": function (oldVal, newVal) {
       this.ns.user = newVal;
@@ -43,23 +27,22 @@
     }
   };
 
+  function validOrDefault (choices, newVal) {
+    return (choices.indexOf(newVal) === -1) ? choices[0] : newVal;
+  }
+
   function render (ribbon) {
     var ns = ribbon.ns;
     var root = ribbon.root;
 
-    // Update the ribbon wrapper classes
+    // Update class names
     root.className = [
       'github-fork-ribbon-wrapper',
-      ns.position
+      ns.position,
+      'color-' + ns.color
     ].join(' ');
-    
-    // Update the ribbon color (ribbon is a dumb idea)
-    if (ribbon.ns.color) {
-      var gfr = root.querySelector('.github-fork-ribbon');
-      gfr.style.backgroundColor = ns.color;
-    }
 
-    // Update the github link
+    // Update the repo link
     var link = root.querySelector('.github-link');
     var parts = ["https://github.com"];
     if (ns.user) {
@@ -68,16 +51,20 @@
         parts.push(ns.repo);
       }
     }
-
-    link.innerHTML = ns.content;
     link.setAttribute('href', parts.join('/'));
+
+    // Update the ribbon content (feels dirty)
+    link.innerHTML = ns.content;
   }
 
-  // Lifecycle methods
   RibbonPrototype.createdCallback = function () {
     this.ns = {};
+
+    // Capture & clear element content
     this.ns.content = this.innerHTML || 'Fork me on GitHub';
     this.innerHTML = '';
+    
+    // Grab root element from template, clone & remember it
     var frag = document.importNode(tmpl.content, true);
     this.root = frag.querySelector('.github-fork-ribbon-wrapper');
     this.appendChild(this.root);
@@ -85,22 +72,22 @@
 
   RibbonPrototype.attachedCallback = function () {
     for (var k in attrs) {
-      if ('content' === k) {
-        continue;
-      }
+      // Skip content; it comes from innerHTML
+      if ('content' === k) { continue; }
       attrs[k].call(this, null, this.getAttribute(k));
     }
     render(this);
   };
 
   RibbonPrototype.detachedCallback = function () {
+    // TODO: Do I really need to do this? Memory leak superstition.
+    this.root = this.ns = null;
   };
 
   RibbonPrototype.attributeChangedCallback = function (attr, oldVal, newVal) {
-    if (attr in attrs) {
-      attrs[attr].call(this, oldVal, newVal);
-      render(this);
-    }
+    if (!(attr in attrs)) { return; }
+    attrs[attr].call(this, oldVal, newVal);
+    render(this);
   };
 
   // Property accessors, magically boilerplated
